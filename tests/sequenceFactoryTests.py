@@ -9,14 +9,14 @@ class sequenceFactoryTest(unittest.TestCase):
 
     def test_generateSampleOligo(self):
 
-        oligo = generateSampleOligo(10, 100)
-        self.assertEqual(np.shape(oligo), (91, 10))
+        initial, oligo = generateSampleOligo(10, 100)
+        self.assertEqual(np.shape(oligo), (90, 10))
 
-        oligo = generateSampleOligo()
+        initial, oligo = generateSampleOligo()
 
-        self.assertEqual(np.shape(oligo), (491, 10))
+        self.assertEqual(np.shape(oligo), (490, 10))
         
-        oligo = generateSampleOligo(10, 1)
+        initial, oligo = generateSampleOligo(10, 1)
 
         self.assertEqual(np.shape(oligo), (0,))
 
