@@ -2,7 +2,6 @@ import unittest
 import numpy as np
 import sys
 
-sys.path.insert(1, '..')
 from src.sequenceFactory import generateSampleOligo
 
 class sequenceFactoryTest(unittest.TestCase):

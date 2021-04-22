@@ -2,7 +2,7 @@ import numpy as np
 import random
 import copy
 
-from sequenceFactory import generateSampleOligo
+from src.sequenceFactory import generateSampleOligo
 
 def max_common_part(oligo_prec, oligo_succ):
 

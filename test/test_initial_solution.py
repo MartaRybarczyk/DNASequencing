@@ -4,8 +4,6 @@ import sys
 import os
 from pathlib import Path
 
-# sys.path.insert(1, Path(__file__).resolve().parent.parent)
-sys.path.insert(1, '..')
 from src.initialSolution import max_common_part, choose_next_oligo
 
 class initialSolutionTest(unittest.TestCase):
