@@ -12,11 +12,12 @@ def generateSampleOligo(l=10, n=500):
     - set of remaining oligo (shuffled)
     """
     if l >= n:
-        return np.array([]), np.array([])
+        return [], []
 
     sequence = [random.randint(0, 3) for i in range(n)]
-    
-    return sequence[0:l], np.random.permutation(np.array([sequence[i:i + l] for i in range(1, n - l + 1)]))
+    temp = [sequence[i:i + l] for i in range(1, n - l + 1)]
+    random.shuffle(temp)
+    return sequence[0:l], temp
 
 if __name__ == "__main__":
 
