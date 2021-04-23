@@ -2,6 +2,7 @@ import numpy as np
 import random
 import copy
 
+from src.constants import acid_map
 from src.sequenceFactory import generateSampleOligo
 
 def max_common_part(oligo_prec, oligo_succ):
@@ -15,6 +16,14 @@ def max_common_part(oligo_prec, oligo_succ):
 
     
     return 0
+
+def find_best_subpath(path, n):
+    """
+    Returns solution with c(path)  <= n
+    In other words searches for longest (in terms of number of oligo) subpath in path
+    """
+    #to do
+    return None
 
 def choose_next_oligo(oligo_prec, S, type='greedy'):
     """
@@ -44,6 +53,20 @@ def greedyHeuristic(S, initial_oligo, n, l):
 
     return solution
 
+def getStringSequence(path):
+    """
+    Returns sequence of letters: A, C, G, T, which represents DNA sequence
+    Parameters:
+    - path: ordered set of oligonucleotides, which represents solution sequence
+    """
+    out = ''.join([acid_map[i] for i in path[0]])
+
+    for i in range(1, len(path)):
+        commonLen = max_common_part(oligo_prec=path[i - 1], oligo_succ=path[i])
+        tail = ''.join([acid_map[i] for i in path[i][commonLen : ]])
+        out += tail
+
+    return out
 
 if __name__ == "__main__":
 

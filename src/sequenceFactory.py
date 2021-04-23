@@ -3,9 +3,9 @@ import random
 
 def generateSampleOligo(l=10, n=500):
     """
-    Simple DNA sequence generator.
-    n: size of the output sequence
-    l: length of the oligonucleotide
+    Simple DNA sequence generator.\n
+    - n: size of the output sequence\n
+    - l: length of the oligonucleotide
 
     Returns pair:
     - initial oligonucleotide

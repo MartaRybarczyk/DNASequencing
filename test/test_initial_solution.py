@@ -4,7 +4,8 @@ import sys
 import os
 from pathlib import Path
 
-from src.initialSolution import max_common_part, choose_next_oligo
+from src.initialSolution import max_common_part, choose_next_oligo, getStringSequence
+from src.constants import acid_map
 
 class initialSolutionTest(unittest.TestCase):
     def test_max_common_part(self):
@@ -36,6 +37,19 @@ class initialSolutionTest(unittest.TestCase):
 
         index = choose_next_oligo(oligo_prec, S, type='greedy')
         self.assertEqual(index, 0)
+
+    def test_get_string_sequence(self):
+
+        path = np.array([
+            [1,2,3,0],
+            [2,3,0,1],
+            [0,1,1,1]
+        ])
+
+        score = ''.join(acid_map[i] for i in [1,2,3,0, 1,1,1])
+        print(score)
+
+        self.assertEqual(score, getStringSequence(path))
 
 if __name__ == "__main__":
 
