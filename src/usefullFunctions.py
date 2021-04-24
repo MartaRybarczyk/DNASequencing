@@ -2,8 +2,8 @@ import numpy as np
 import random
 import copy
 
-from constants import acid_map
-from sequenceFactory import generateSampleOligo
+from src.constants import acid_map
+from src.sequenceFactory import generateSampleOligo
 
 def max_common_part(oligo_prec, oligo_succ):
 
@@ -20,27 +20,40 @@ def max_common_part(oligo_prec, oligo_succ):
 def find_best_subpath(path, n):
     """
     Returns solution with c(path)  <= n
-    In other words searches for longest (in terms of number of oligo) subpath in path
+    In other words, searches for longest (in terms of number of oligo) subpath in a given path
     """
     #to do
     pass
 
-def choose_next_oligo(oligo_prec, S, alg='greedy'):
+def choose_next_oligo(oligo_prec, S, alg='greedy', use_phermone=False, phermone_matrix=None):
     """
     Return index of set S, which corresponds to best oligo
     """ 
+    if use_phermone == True and phermone_matrix != None:
+        # to do
+        pass
+
     if alg == 'greedy':
         return np.argmax([max_common_part(oligo_prec, S[i]) for i in range(len(S))])
-    # elif alg == 'greedy_lag':
-    #     np.argmax([np.argmax(max_common_part(oligo_prec, S[i]) + max_common_part(S[i], ) for i in range(len(S))])
+    elif alg == 'greedy_lag':
+        # 
+        return np.argmax([max_common_part(oligo_prec, S[i]) + max([max_common_part(S[i], S[j]) for j in range(len(S)) if j != i]) for i in range(len(S))])
 
-        return np.argmax([max_common_part(oligo_prec, S[i])])
+def objective_function(solution):
+    """
+    Returns signle value -> evaluation of solution.\n
+    Parameters:
+    - solution: Solution object
+    """
+
+    # now its only length of the path
+    return len(solution.path)
 
 def getStringSequence(path):
     """
     Returns sequence of letters: A, C, G, T, which represents DNA sequence
     Parameters:
-    - path: ordered set of oligonucleotides, which represents solution sequence
+    - path: ordered set of oligonucleotides, solution path
     """
     out = ''.join([acid_map[i] for i in path[0]])
 

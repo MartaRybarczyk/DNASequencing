@@ -4,7 +4,7 @@ import sys
 import os
 from pathlib import Path
 
-from src.initialSolution import max_common_part, choose_next_oligo, getStringSequence
+from src.usefullFunctions import max_common_part, choose_next_oligo, getStringSequence
 from src.constants import acid_map
 
 class initialSolutionTest(unittest.TestCase):
@@ -30,13 +30,27 @@ class initialSolutionTest(unittest.TestCase):
 
         oligo_prec = [2,2,3]
 
-        index = choose_next_oligo(oligo_prec, S, type='greedy')
+        index = choose_next_oligo(oligo_prec, S, alg='greedy')
         self.assertEqual(index, 3)
 
         oligo_prec = [2,1,3]
 
-        index = choose_next_oligo(oligo_prec, S, type='greedy')
+        index = choose_next_oligo(oligo_prec, S, alg='greedy')
         self.assertEqual(index, 0)
+
+    def test_choose_next_oligo_greedy_lag(self):
+
+        S = [
+            [1,2,0],
+            [1,2,3],
+            [0,3,2],
+            [2,3,3]
+        ]
+
+        oligo_prec = [1,1,2]
+
+        index = choose_next_oligo(oligo_prec, S, alg='greedy_lag')
+        self.assertEqual(index, 1)
 
     def test_get_string_sequence(self):
 

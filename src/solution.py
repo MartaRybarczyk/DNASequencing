@@ -1,5 +1,5 @@
-from constants import acid_map, dummy_oligo
-from initialSolution import max_common_part
+from src.constants import acid_map, dummy_oligo
+from src.usefullFunctions import max_common_part
 import numpy as np
 
 class Solution():
