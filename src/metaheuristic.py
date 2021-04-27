@@ -18,6 +18,12 @@ def initialize_phermone_values(phermone_matrix):
 def reset_phermone_values(T):
     pass
 
+def delete_phermone(phermone_matrix, index=None):
+
+    if index != None and index >= 0 and index < np.size(phermone_matrix)[0]:
+        phermone_matrix = np.delete(phermone_matrix, index, axis=0)
+        phermone_matrix = np.delete(phermone_matrix, index, axis=1)
+
 def terminate_search():
     pass
 
@@ -45,6 +51,8 @@ def ACO_metaheuristic(S, initial_oligo, n, l):
     phermone_matrix = np.zeros((len(S) + 1, len(S) + 1))
 
     initialize_phermone_values(phermone_matrix)
+
+    phermone_copy = deepcopy(phermone_matrix) # this matrix will change within one iteration
 
     while terminate_search() == False:
         pib = solution.Solution()

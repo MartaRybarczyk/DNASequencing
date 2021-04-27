@@ -25,12 +25,16 @@ def find_best_subpath(path, n):
     #to do
     pass
 
-def choose_next_oligo(oligo_prec, S, alg='greedy', use_phermone=False, phermone_matrix=None):
+def choose_next_oligo(oligo_prec, S, alg='greedy', use_phermone=False, phermone_model=None):
     """
     Return index of set S, which corresponds to best oligo
     """ 
-    if use_phermone == True and phermone_matrix != None:
-        # to do
+
+    phermone_matrix, last_oligo_index, bitmap = phermone_model
+    if use_phermone == True and phermone_matrix != None and bitmap != None:
+        # utilize phermone model
+        # construct restricted candidate list
+        # S_restricted = sorted(S, )
         pass
 
     if alg == 'greedy':

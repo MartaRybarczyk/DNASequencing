@@ -33,3 +33,6 @@ class Solution():
             out += ''.join([acid_map[c] for c in self.path[i][self.commons[i - 1]:]])
 
         return out
+
+if __name__ == "__main__":
+    pass
