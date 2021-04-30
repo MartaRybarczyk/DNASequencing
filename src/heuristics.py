@@ -9,8 +9,8 @@ def greedyHeuristic(S, init_oligo_index, n, l, choose_next_alg='greedy', use_phe
 
     copyS = copy.deepcopy(S)
 
-    solution_l = 0
-    solution_c = 0
+    solution_l = 0 # number of oligo in sequence
+    solution_c = 0 # total length of current solution
 
     solution = Solution()
     solution.add_oligo(copyS[init_oligo_index], vertex_no=init_oligo_index)
@@ -18,7 +18,7 @@ def greedyHeuristic(S, init_oligo_index, n, l, choose_next_alg='greedy', use_phe
     solution_c = l
     solution_l = 1
 
-    while solution.path_len <= n and solution_l <= n - l + 1:
+    while solution.path_len < n and solution_l < n - l + 1:
         
         last_vertex = solution.graph_path[-1]
 
@@ -26,6 +26,7 @@ def greedyHeuristic(S, init_oligo_index, n, l, choose_next_alg='greedy', use_phe
         index = choose_next_oligo(solution.path[-1], copyS, choose_next_alg, use_phermone=use_phermone, phermone_model=phermone_values)
 
         solution_l += 1
+        
         solution.add_oligo(copyS.pop(index), index)
 
     if solution.path_len > n:

@@ -146,7 +146,7 @@ def ACO_metaheuristic(S, initial_oligo, n, l, debug=False, gather_stats=False):
 
 if __name__ == "__main__":
 
-    n = 201
+    n = 12
     l = 10
     init_oligo, last_oligo, S = generateSampleOligo(l, n)
 

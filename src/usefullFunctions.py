@@ -55,8 +55,8 @@ def objective_function(solution):
     - solution: Solution object
     """
 
-    # now its only length of the path
-    return len(solution.path)
+    # now its only number of oligo in sequence
+    return solution.get_path_len()
 
 def getStringSequence(path):
     """

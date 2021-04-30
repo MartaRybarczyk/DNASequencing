@@ -31,6 +31,9 @@ class Solution():
         self.path.pop(-1)
         self.graph_path.pop()
 
+    def get_path_len(self):
+        return len(self.path) - 1
+
     def __str__(self):
         out = ''
         for i in range(1,len(self.path)):

@@ -1,5 +1,8 @@
 import numpy as np
 import random
+import time
+
+random.seed(time.time())
 
 def generateSampleOligo(l=10, n=500, initial_oligo=True, last_oligo=False):
     """
