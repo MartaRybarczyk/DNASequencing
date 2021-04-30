@@ -21,12 +21,12 @@ class initialSolutionTest(unittest.TestCase):
 
     def test_choose_next_oligo_greedy(self):
 
-        S = [
-            [1,2,3],
-            [1,2,3],
-            [0,3,2],
-            [2,3,3]
-        ]
+        S = {
+            0: [1,2,3],
+            1: [1,2,3],
+            2: [0,3,2],
+            3: [2,3,3]
+        }
 
         oligo_prec = [2,2,3]
 
@@ -40,12 +40,12 @@ class initialSolutionTest(unittest.TestCase):
 
     def test_choose_next_oligo_greedy_lag(self):
 
-        S = [
-            [1,2,0],
-            [1,2,3],
-            [0,3,2],
-            [2,3,3]
-        ]
+        S = {
+            0: [1,2,0],
+            1: [1,2,3],
+            2: [0,3,2],
+            3: [2,3,3]
+        }
 
         oligo_prec = [1,1,2]
 

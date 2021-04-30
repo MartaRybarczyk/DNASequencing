@@ -4,6 +4,7 @@ import copy
 
 from src.constants import acid_map
 from src.sequenceFactory import generateSampleOligo
+# import src.phermone_interface as phermone
 
 def max_common_part(oligo_prec, oligo_succ):
 
@@ -27,21 +28,25 @@ def find_best_subpath(path, n):
 
 def choose_next_oligo(oligo_prec, S, alg='greedy', use_phermone=False, phermone_model=None):
     """
-    Return index of set S, which corresponds to best oligo
+    Return index / key of set S, which corresponds to best oligo
     """ 
 
-    phermone_matrix, last_oligo_index, bitmap = phermone_model
-    if use_phermone == True and phermone_matrix != None and bitmap != None:
+    phermone_values = phermone_model
+    if use_phermone == True:
         # utilize phermone model
         # construct restricted candidate list
-        # S_restricted = sorted(S, )
-        pass
+
+        # simplest version
+        temp = np.zeros(np.size(phermone_values)) - 1
+        for key in S:
+            temp[key] = max_common_part(oligo_prec, S[key]) / (len(S[key]) - 1)
+        return np.argmax(phermone_values * (temp ** 5))
 
     if alg == 'greedy':
-        return np.argmax([max_common_part(oligo_prec, S[i]) for i in range(len(S))])
+        return np.argmax([max_common_part(oligo_prec, S[key]) for key in S])
     elif alg == 'greedy_lag':
         # 
-        return np.argmax([max_common_part(oligo_prec, S[i]) + max([max_common_part(S[i], S[j]) for j in range(len(S)) if j != i]) for i in range(len(S))])
+        return np.argmax([max_common_part(oligo_prec, S[i]) + max([max_common_part(S[i], S[j]) for j in S if j != i]) for i in S])
 
 def objective_function(solution):
     """

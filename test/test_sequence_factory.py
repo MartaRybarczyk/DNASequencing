@@ -8,16 +8,16 @@ class sequenceFactoryTest(unittest.TestCase):
 
     def test_generateSampleOligo(self):
 
-        initial, oligo = generateSampleOligo(10, 100)
-        self.assertEqual(np.shape(oligo), (90, 10))
+        initial, last, oligos = generateSampleOligo(10, 100)
+        self.assertEqual(initial, 0)
+        self.assertEqual(last, None)
+        self.assertEqual(len(oligos), 91)
 
-        initial, oligo = generateSampleOligo()
+        initial, last, oligos = generateSampleOligo(last_oligo=True)
 
-        self.assertEqual(np.shape(oligo), (490, 10))
-        
-        initial, oligo = generateSampleOligo(10, 1)
-
-        self.assertEqual(np.shape(oligo), (0,))
+        self.assertEqual(initial, 0)
+        self.assertEqual(last, 1)
+        self.assertEqual(len(oligos), 491)
 
 if __name__ == "__main__":
 

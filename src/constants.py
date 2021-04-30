@@ -5,3 +5,7 @@ dummy_oligo = -1                 # initial fake oligo
 
 # metaheuristic
 rcl_card = 10 # restricted candidate list cardinality
+rho = 0.01    # learning rate
+kib = 0.3
+krb = 0.3
+kbs = 0.3

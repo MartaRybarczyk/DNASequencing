@@ -12,20 +12,23 @@ class test_solution(unittest.TestCase):
         self.assertEqual(solution.path_len, 0)
         self.assertEqual(solution.path[0][0], dummy_oligo)
         self.assertEqual(len(solution.commons), 0)
+        self.assertEqual(len(solution.graph_path), 1)
 
         oligo_list = [[1,2,2,1], [1,0,0,1]]
 
-        solution.add_oligo(oligo=oligo_list[0])
+        solution.add_oligo(oligo=oligo_list[0], vertex_no=0)
 
         self.assertEqual(solution.path_len, 4)
         self.assertEqual(solution.commons[0], 0)
         self.assertEqual(len(solution.path), 2)
+        self.assertEqual(solution.graph_path[1], 0)
 
-        solution.add_oligo(oligo=oligo_list[1])
+        solution.add_oligo(oligo=oligo_list[1], vertex_no=1)
 
         self.assertEqual(solution.path_len, 7)
         self.assertEqual(solution.commons[1], 1)
         self.assertEqual(len(solution.path), 3)
+        self.assertEqual(solution.graph_path[2], 1)
 
         solution.pop_back_oligo()
 
