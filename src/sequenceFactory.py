@@ -1,6 +1,7 @@
 import numpy as np
 import random
 import time
+from src.constants import acid_rev_map
 
 random.seed(time.time())
 
@@ -42,6 +43,27 @@ def generateSampleOligo(l=10, n=500, initial_oligo=True, last_oligo=False):
         dic[i] = temp[i]
 
     return init_oligo_index, last_oligo_index, dic
+
+def get_data_from_file(file):
+
+    S = {}
+    n = 0
+    l = 0
+
+    with open(file, 'r') as f:
+        
+        n = int(f.readline())
+        l = n - int(f.readline()) + 1
+
+        it = 0
+
+        oligo = f.readlines()
+
+        for o in oligo:
+            S[it] = [acid_rev_map[letter] for letter in o.strip()]
+            it += 1
+        
+    return n, l, S
 
 if __name__ == "__main__":
 
