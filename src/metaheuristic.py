@@ -3,8 +3,9 @@ from src.usefullFunctions import objective_function
 import numpy as np
 import math
 from copy import deepcopy
-from src.sequenceFactory import generateSampleOligo
+from src.sequenceFactory import generateSampleOligo, get_data_from_file
 import time
+import os
 
 def apply_phermone_update(cf, bs_update, T, pib, prb, pbs):
 
@@ -49,7 +50,7 @@ def terminate_search(duration):
 
     return False
 
-def ACO_metaheuristic(S, initial_oligo, n, l, debug=False, gather_stats=False):
+def ACO_metaheuristic(S, initial_oligo=None, debug=False, gather_stats=False):
     """
     ## Ant Cology Optimization algorithm.\n
     ### Parameters:
@@ -146,10 +147,10 @@ def ACO_metaheuristic(S, initial_oligo, n, l, debug=False, gather_stats=False):
 
 if __name__ == "__main__":
 
-    n = 12
-    l = 10
-    init_oligo, last_oligo, S = generateSampleOligo(l, n)
+    work_path = os.path.dirname(os.path.realpath(__file__))
+    
+    n, l, S = get_data_from_file(work_path + '/../testFiles/benchmark/error_rate_5/stand5/5/200_01')
 
-    result = ACO_metaheuristic(S, init_oligo, n, l, debug=True)
+    result = ACO_metaheuristic(S, debug=True)
 
     print(result)

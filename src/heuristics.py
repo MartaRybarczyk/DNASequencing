@@ -1,11 +1,11 @@
 import numpy as np
 import copy
 
-from src.usefullFunctions import choose_next_oligo, max_common_part, find_best_subpath
+from src.usefullFunctions import choose_next_oligo, max_common_part, find_best_subpath, choose_init_oligo
 from src.solution import Solution
 from src.sequenceFactory import generateSampleOligo
 
-def greedyHeuristic(S, init_oligo_index, n, l, choose_next_alg='greedy', use_phermone=False, phermone_model=None, backward=False):
+def greedyHeuristic(S, init_oligo_index=None, n=None, l=None, choose_next_alg='greedy', use_phermone=False, phermone_model=None, backward=False):
 
     copyS = copy.deepcopy(S)
 
@@ -13,7 +13,12 @@ def greedyHeuristic(S, init_oligo_index, n, l, choose_next_alg='greedy', use_phe
     solution_c = 0 # total length of current solution
 
     solution = Solution()
-    solution.add_oligo(copyS[init_oligo_index], vertex_no=init_oligo_index)
+
+    if init_oligo_index is not None:
+        solution.add_oligo(copyS[init_oligo_index], vertex_no=init_oligo_index)
+    else:
+        init = choose_init_oligo(copyS)
+        solution.add_oligo(S[init], vertex_no=init)
 
     solution_c = l
     solution_l = 1
@@ -26,7 +31,7 @@ def greedyHeuristic(S, init_oligo_index, n, l, choose_next_alg='greedy', use_phe
         index = choose_next_oligo(solution.path[-1], copyS, choose_next_alg, use_phermone=use_phermone, phermone_model=phermone_values)
 
         solution_l += 1
-        
+
         solution.add_oligo(copyS.pop(index), index)
 
     if solution.path_len > n:

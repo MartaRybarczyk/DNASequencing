@@ -26,6 +26,10 @@ def find_best_subpath(path, n):
     #to do
     pass
 
+def choose_init_oligo(S, alg='random'):
+
+    return random.randint(0, len(S) - 1)
+
 def choose_next_oligo(oligo_prec, S, alg='greedy', use_phermone=False, phermone_model=None):
     """
     Return index / key of set S, which corresponds to best oligo
