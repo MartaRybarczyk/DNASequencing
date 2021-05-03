@@ -1,6 +1,6 @@
 import unittest
 
-from src.solution import Solution
+from src.solution import Solution, is_valid
 from src.constants import dummy_oligo, acid_map
 import numpy as np
 
@@ -38,6 +38,24 @@ class test_solution(unittest.TestCase):
 
         self.assertEqual(str(solution), ''.join([acid_map[i] for i in oligo_list[0]]))
 
+    def test_is_valid_solution(self):
+
+        S = {
+            0 : [1,2,3],
+            1 : [2,3,1],
+            2 : [3,1,2]
+        }
+
+        solution = Solution()
+        solution.add_oligo(S[0], 0)
+        solution.add_oligo(S[1], 1)
+        solution.add_oligo(S[2], 2)
+
+        self.assertEqual(is_valid(solution, S), True)
+
+        solution.add_oligo(S[0], 0)
+
+        self.assertEqual(is_valid(solution, S), False)
 
 if __name__ == "__main__":
 

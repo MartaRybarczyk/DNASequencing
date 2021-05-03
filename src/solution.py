@@ -1,6 +1,7 @@
 from src.constants import acid_map, dummy_oligo
 from src.usefullFunctions import max_common_part
 import numpy as np
+import copy
 
 class Solution():
 
@@ -40,6 +41,33 @@ class Solution():
             out += ''.join([acid_map[c] for c in self.path[i][self.commons[i - 1]:]])
 
         return out
+
+def is_valid(solution, S):
+    """
+    Checks if solution is valid.
+    - solution: Solution class object
+    - S: set of oligo, data of the problem
+    """
+    copyS = copy.deepcopy(S)
+
+    path_len = len(copyS[solution.graph_path[1]])
+
+    for i in range(2, len(solution.graph_path)):
+
+        try:
+            temp = max_common_part(copyS[solution.graph_path[i - 1]], copyS[solution.graph_path[i]])
+        except KeyError:
+            return False
+
+        if solution.commons[i - 1] != temp:
+            return False
+        
+        path_len += temp
+
+        copyS.pop(solution.graph_path[i - 1])
+
+
+    return True
 
 if __name__ == "__main__":
     pass
