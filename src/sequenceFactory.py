@@ -74,6 +74,21 @@ def get_data_from_file(file):
             it += 1
         
     return n, l, S
+#n - dlugosc ciagu
+#l - dlugosc oligo
+#pos_error -procent bledu pozytywnego
+#neg_error -procent bledu negatywego
+#initial_oligo - czy znany jest początkowy oligonu...
+#kazdy oligo to jest lista, na przykład [2,1,3,3], skladajaca sie z liczb 0..3
+#jako wynik zwracasz oryginalny ciag dna oraz słownik gdzie kluczami sa indeksy a wartosciami oligo,
+#np {0: [0,2,1], 1:[3,3,3], 2:[1,2,0]}
+#jesli initial_oligo jest true to zwracasz tez osobno klucz do tego oligo (czyli jakby indeks)
+#oligo musi byc wymieszane 
+
+#wiem, moze sie wydawać dziwne ze to ma byc slownik ale przy usuwaniu oligo przestawianiu trzeba je jakos 
+#jednoznacznie identyfikowac, stad slownik
+def generateData(n, l, pos_error, neg_error, initial_oligo=True):
+    pass
 
 if __name__ == "__main__":
 
