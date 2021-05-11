@@ -13,7 +13,7 @@ def generateSampleOligo(l=10, n=500, initial_oligo=True, last_oligo=False):
     - initial_oligo: boolean parameter, if true function returns also index to first oligo in set S
     - back_oligo: same as initial_oligo, but returns index to last oligo in set S
 
-    Returns pair:
+    Return pair:
     - set of oligo (shuffled)
     """
     init_oligo_index = None
@@ -45,6 +45,16 @@ def generateSampleOligo(l=10, n=500, initial_oligo=True, last_oligo=False):
     return init_oligo_index, last_oligo_index, dic
 
 def get_data_from_file(file):
+
+    """
+    ## Parse data from file
+    First line of the file represents length of the DNA sequence,
+    next line is the number K of oligo, which are in the next K lines as string of letters A,C,T,G each.
+    ## Return:
+    - n: target lenth of the sequence
+    - l: length of one oligo
+    - S: dictionary of oligo
+    """
 
     S = {}
     n = 0

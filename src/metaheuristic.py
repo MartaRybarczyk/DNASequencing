@@ -50,7 +50,7 @@ def terminate_search(duration):
 
     return False
 
-def ACO_metaheuristic(S, initial_oligo=None, debug=False, gather_stats=False):
+def ACO_metaheuristic(S, n, l, initial_oligo=None, debug=False, gather_stats=False):
     """
     ## Ant Cology Optimization algorithm.\n
     ### Parameters:
@@ -151,6 +151,6 @@ if __name__ == "__main__":
     
     n, l, S = get_data_from_file(work_path + '/../testFiles/benchmark/error_rate_5/stand5/5/200_01')
 
-    result = ACO_metaheuristic(S, debug=True)
+    result = ACO_metaheuristic(S, n, l, debug=True)
 
     print(result)
