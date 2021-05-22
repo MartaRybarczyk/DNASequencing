@@ -1,5 +1,5 @@
 from src import heuristics, solution, constants
-from src.usefullFunctions import objective_function
+from src.usefullFunctions import objective_function, roundFloat
 import numpy as np
 import math
 from copy import deepcopy
@@ -45,12 +45,12 @@ def delete_phermone(phermone_matrix, index=None):
 
 def terminate_search(duration):
     
-    if duration > 10:
+    if duration > constants.MAX_DURATION:
         return True
 
     return False
 
-def ACO_metaheuristic(S, n, l, initial_oligo=None, debug=False, gather_stats=False):
+def ACO_metaheuristic(S, n, l, initial_oligo=None, debug=False, gather_stats=False, stats=None):
     """
     ## Ant Cology Optimization algorithm.\n
     ### Parameters:
@@ -65,17 +65,22 @@ def ACO_metaheuristic(S, n, l, initial_oligo=None, debug=False, gather_stats=Fal
     pbs = None
     prb = None
 
-    iterNo = 0 # number of iterations
-    resetNo = 0 # number of resets
-    best_change_count = 0 # counts how many best solution has changed
-    current_time = 0   
-    current_solution_value = 0 # objective function of current best solution
+    if stats is not None:
+        stats["iterNo"] = 0 # number of iterations
+        stats["resetNo"] = 0 # number of resets
+        stats["bestChangeCount"] = 0 # counts how many best solution has changed
+        current_time = 0   
+        current_solution_value = 0 # objective function of current best solution
+        current_best_value = 0
 
-    # for plotting change of the best solution in time
-    best_solution_plot = []
+        # for plotting change of the best solution in time and iteration
+        stats["time_series"] = []
+        stats["best_solution_series"] = []
+        stats["current_solution_series"] = []
+        stats["iter_no_series"] = []
 
-    nf = 10
-    nb = 0
+    nf = constants.NF
+    nb = constants.NB
 
     conv_factor = 0
     bs_update = False
@@ -94,8 +99,12 @@ def ACO_metaheuristic(S, n, l, initial_oligo=None, debug=False, gather_stats=Fal
     while terminate_search(duration) == False:
 
         if gather_stats:
-            iterNo += 1
-            best_solution_plot.append([duration, current_solution_value])
+            stats["iterNo"] += 1
+            stats["iter_no_series"].append(stats["iterNo"])
+            stats["time_series"].append(roundFloat(duration, 2))
+            stats["current_solution_series"].append(current_solution_value)
+            stats["best_solution_series"].append(current_best_value)
+
 
         if debug == True:
             print('New iteration')
@@ -113,26 +122,30 @@ def ACO_metaheuristic(S, n, l, initial_oligo=None, debug=False, gather_stats=Fal
             if objective_function(current_solution) > objective_function(pib):
                 pib = deepcopy(current_solution)
 
+        if gather_stats:
+            current_solution_value = objective_function(pib)
         if prb == None or objective_function(pib) > objective_function(prb):
             prb = deepcopy(pib)
         if pbs == None or objective_function(pib) > objective_function(pbs):
             pbs = deepcopy(pib)
-            best_change_count += 1
+            current_best_value = objective_function(pbs)
+            if gather_stats:
+                stats["bestChangeCount"] += 1
 
         if debug:
             print(
                 'Iteration best: ', objective_function(pib), 
                 'Reset best: ', objective_function(prb), 
-                'Best found: ', objective_function(pbs)
+                'Best found: ', objective_function(pbs), 'Convergence factor:', conv_factor
             )
 
         apply_phermone_update(conv_factor, bs_update, phermone_matrix, pib, prb, pbs)
         conv_factor = compute_convergence_factor(phermone_matrix)
 
-        if conv_factor > 0.9999:
+        if conv_factor > constants.CONV_THRESHOLD:
             if bs_update == True:
                 reset_phermone_values(phermone_matrix)
-                resetNo += 1
+                stats["resetNo"] += 1
                 if debug:
                     print('Reset phermone values.')
                 prb = None
@@ -142,15 +155,19 @@ def ACO_metaheuristic(S, n, l, initial_oligo=None, debug=False, gather_stats=Fal
         
         duration = time.time() - algorithm_start
 
+    # if gather_stats:
+    #     print(stats)
+
     return pbs
         
 
 if __name__ == "__main__":
 
     work_path = os.path.dirname(os.path.realpath(__file__))
+    stats = {}
     
-    n, l, S = get_data_from_file(work_path + '/../testFiles/benchmark/error_rate_5/stand5/5/200_01')
+    n, l, S = get_data_from_file(work_path + '/../testFiles/benchmark/error_rate_20/stand20/20/200_01')
 
-    result = ACO_metaheuristic(S, n, l, debug=True)
+    result = ACO_metaheuristic(S, n, l, debug=True, gather_stats=True, stats=stats)
 
     print(result)

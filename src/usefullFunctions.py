@@ -77,7 +77,8 @@ def getStringSequence(path):
 
     return out
 
-
+def roundFloat(floatNumber, decimalPlaces):
+    return int(floatNumber * (10 ** decimalPlaces)) / (10 ** decimalPlaces)
 
 if __name__ == "__main__":
     pass

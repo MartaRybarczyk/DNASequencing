@@ -10,3 +10,10 @@ rho = 0.01    # learning rate
 kib = 0.3
 krb = 0.3
 kbs = 0.3
+
+MAX_DURATION = 60
+
+NF = 10
+NB = 0
+
+CONV_THRESHOLD = 0.9999
