@@ -37,6 +37,8 @@ def gather_statistics():
         data_files.sort()
         target_sequences.sort()
 
+        scores["files"][e_rate] = {}
+
         for file, file_sequence in zip(data_files, target_sequences):
 
             stats = {}
@@ -57,9 +59,9 @@ def gather_statistics():
             stats["output length"] = solution.path_len
             stats["output sequence"] = str(solution)
 
-            scores["files"][file] = stats
+            scores["files"][e_rate][file] = stats
 
-            print(json.dumps(scores))
+    print(json.dumps(scores))
 
 if __name__ == "__main__":
 

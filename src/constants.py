@@ -11,7 +11,7 @@ kib = 0.3
 krb = 0.3
 kbs = 0.3
 
-MAX_DURATION = 60
+MAX_DURATION = 20
 
 NF = 10
 NB = 0
