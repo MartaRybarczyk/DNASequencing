@@ -80,5 +80,24 @@ def getStringSequence(path):
 def roundFloat(floatNumber, decimalPlaces):
     return int(floatNumber * (10 ** decimalPlaces)) / (10 ** decimalPlaces)
 
+def levenshteinDistance(a, b):
+    if len(b) == 0:
+        return len(a)
+    if len(a) == 0:
+        return len(b)
+    if a[0] == b[0]:
+        return levenshteinDistance(a[1:], b[1:])
+    return 1 + min(
+        levenshteinDistance(a[1:], b),
+        levenshteinDistance(a, b[1:]),
+        levenshteinDistance(a[1:], b[1:])
+    )
+
+def testrec(a):
+    print(a)
+    if len(a) == 0:
+        return
+    return testrec(a[1:])
+
 if __name__ == "__main__":
-    pass
+    testrec("siemano")
