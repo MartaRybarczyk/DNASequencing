@@ -1,5 +1,5 @@
 from src.constants import acid_map, dummy_oligo
-from src.usefullFunctions import max_common_part
+from src.usefullFunctions import max_common_part, levenshteinDistance
 import numpy as np
 import copy
 
@@ -68,6 +68,17 @@ def is_valid(solution, S):
 
 
     return True
+
+def solutionQuality(solution, origin_seq, n, l, name='lev'):
+
+    if name == 'lev':
+        found_seq = str(solution)
+        max_dist = max(len(found_seq), len(origin_seq))
+        return 1 - levenshteinDistance(found_seq, origin_seq) / max_dist
+    if name == 'oligo used':
+        return solution.get_path_len() / n
+
+    return None
 
 if __name__ == "__main__":
     pass

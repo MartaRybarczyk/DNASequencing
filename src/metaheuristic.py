@@ -171,3 +171,4 @@ if __name__ == "__main__":
     result = ACO_metaheuristic(S, n, l, debug=True, gather_stats=True, stats=stats)
 
     print(result)
+    print(stats)

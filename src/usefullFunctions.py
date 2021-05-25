@@ -2,7 +2,7 @@ import numpy as np
 import random
 import copy
 
-from src.constants import acid_map
+from src.constants import acid_map, det_rate, rcl_card
 from src.sequenceFactory import generateSampleOligo
 # import src.phermone_interface as phermone
 
@@ -34,6 +34,12 @@ def choose_next_oligo(oligo_prec, S, alg='greedy', use_phermone=False, phermone_
     """
     Return index / key of set S, which corresponds to best oligo
     """ 
+    if len(S) == 0:
+        return None
+    if len(S) == 1:
+        for key in S:
+            return key
+
 
     phermone_values = phermone_model
     if use_phermone == True:
@@ -41,10 +47,27 @@ def choose_next_oligo(oligo_prec, S, alg='greedy', use_phermone=False, phermone_
         # construct restricted candidate list
 
         # simplest version
-        temp = np.zeros(np.size(phermone_values)) - 1
+        temp = np.zeros((np.size(phermone_values), 2))
         for key in S:
-            temp[key] = max_common_part(oligo_prec, S[key]) / (len(S[key]) - 1)
-        return np.argmax(phermone_values * (temp ** 5))
+            temp[key][0] = max_common_part(oligo_prec, S[key]) / (len(S[key]) - 1)
+            temp[key][1] = key
+
+        temp[:,0] = phermone_values * (temp[:, 0] ** 5)
+        temp = np.array(sorted(temp, key=lambda it: it[0]))
+        restricted_list = temp[-min(temp.shape[0], rcl_card):]
+        if(random.random() < det_rate):
+            # return best oligo
+            return int(restricted_list[np.argmax(restricted_list[:, 1])][1])
+
+        # roulette-wheel selection
+        prob = restricted_list[:,0] / sum(restricted_list[:,0])
+        for i in range(1, len(prob)):
+            prob[i] += prob[i - 1]
+        r = random.random()
+        it = 0
+        while(prob[it] < r):
+            it += 1
+        return int(restricted_list[it][1])
 
     if alg == 'greedy':
         return np.argmax([max_common_part(oligo_prec, S[key]) for key in S])
@@ -93,11 +116,5 @@ def levenshteinDistance(a, b):
         levenshteinDistance(a[1:], b[1:])
     )
 
-def testrec(a):
-    print(a)
-    if len(a) == 0:
-        return
-    return testrec(a[1:])
-
 if __name__ == "__main__":
-    testrec("siemano")
+    pass

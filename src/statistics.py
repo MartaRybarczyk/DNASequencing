@@ -1,6 +1,6 @@
 from src.metaheuristic import ACO_metaheuristic
 from src.sequenceFactory import get_data_from_file
-from src.solution import Solution
+from src.solution import Solution, solutionQuality
 import os
 import sys
 from src import constants
@@ -58,6 +58,7 @@ def gather_statistics():
             stats["oligo used"] = solution.get_path_len()
             stats["output length"] = solution.path_len
             stats["output sequence"] = str(solution)
+            stats["quality"] = solutionQuality(solution, target_seq, n, l)
 
             scores["files"][e_rate][file] = stats
 

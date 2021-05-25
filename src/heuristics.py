@@ -27,7 +27,8 @@ def greedyHeuristic(S, init_oligo_index=None, n=None, l=None, choose_next_alg='g
         
         last_vertex = solution.graph_path[-1]
 
-        phermone_values = np.array([i[last_vertex] for i in phermone_model])
+        # phermone_values = np.array([i[last_vertex] for i in phermone_model])
+        phermone_values = phermone_model[:, last_vertex]
         index = choose_next_oligo(solution.path[-1], copyS, choose_next_alg, use_phermone=use_phermone, phermone_model=phermone_values)
 
         solution_l += 1
