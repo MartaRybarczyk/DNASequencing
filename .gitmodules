@@ -1,0 +1,3 @@
+[submodule "needleman-wunsch-py"]
+	path = needleman-wunsch-py
+	url = https://github.com/jtloong/needleman-wunsch-py.git

@@ -3,6 +3,8 @@ from src.usefullFunctions import max_common_part, levenshteinDistance
 import numpy as np
 import copy
 
+from src import needleman_wunsch
+
 class Solution():
 
     def __init__(self, ):
@@ -57,6 +59,7 @@ def is_valid(solution, S):
         try:
             temp = max_common_part(copyS[solution.graph_path[i - 1]], copyS[solution.graph_path[i]])
         except KeyError:
+            
             return False
 
         if solution.commons[i - 1] != temp:
@@ -71,12 +74,14 @@ def is_valid(solution, S):
 
 def solutionQuality(solution, origin_seq, n, l, name='lev'):
 
-    if name == 'lev':
-        found_seq = str(solution)
+    found_seq = str(solution)
+    if name == 'lev': 
         max_dist = max(len(found_seq), len(origin_seq))
         return 1 - levenshteinDistance(found_seq, origin_seq) / max_dist
-    if name == 'oligo used':
+    elif name == 'oligo used':
         return solution.get_path_len() / n
+    elif name == 'needleman-wunsch':
+        return needleman_wunsch.main(found_seq, origin_seq, 1, -1, 0) / max(len(found_seq), n)
 
     return None
 

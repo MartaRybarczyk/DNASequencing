@@ -166,9 +166,12 @@ if __name__ == "__main__":
     work_path = os.path.dirname(os.path.realpath(__file__))
     stats = {}
     
-    n, l, S = get_data_from_file(work_path + '/../testFiles/benchmark/error_rate_20/stand20/20/200_01')
+    n, l, S = get_data_from_file(work_path + '/../testFiles/benchmark/error_rate_5/stand5/5/200_02')
 
     result = ACO_metaheuristic(S, n, l, debug=True, gather_stats=True, stats=stats)
 
     print(result)
+    print(result.graph_path)
     print(stats)
+
+    print(solution.is_valid(result, S))

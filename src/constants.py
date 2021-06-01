@@ -6,15 +6,17 @@ dummy_oligo = -1                 # initial fake oligo
 
 # metaheuristic
 rcl_card = 3 # restricted candidate list cardinality
-det_rate = 0.5 # determinism rate
+det_rate = 0.95 # determinism rate
 rho = 0.01    # learning rate
 kib = 0.3
 krb = 0.3
 kbs = 0.3
 
-MAX_DURATION = 20
+MAX_DURATION = 15
 
-NF = 10
+NF = 6
 NB = 0
 
 CONV_THRESHOLD = 0.9999
+
+MAX_OLIGO_LEN = 100
