@@ -81,8 +81,10 @@ def greedyLagHeuristic(S, init_oligo_index, n, l, commons_matrix=None):
     solution_l = 1
 
     while solution.path_len < n and len(copyS) > 1:
+        
+        last_vertex = solution.graph_path[-1]
 
-        index = choose_next_oligo(solution.path[-1], copyS, 'greedy_lag')
+        index = choose_next_oligo(solution.path[-1], copyS, 'greedy_lag', commons_matrix=com_matrix, index_prec=last_vertex)
         solution_l += 1
         solution.add_oligo(copyS.pop(index), index)
         if prec_com:
@@ -99,7 +101,7 @@ def greedyLagHeuristic(S, init_oligo_index, n, l, commons_matrix=None):
 
 if __name__ == "__main__":
 
-    init_oligo, last_oligo, S = generateSampleOligo(8, 100, initial_oligo=False, last_oligo=False)
+    init_oligo, last_oligo, S = generateSampleOligo(8, 400, initial_oligo=False, last_oligo=False)
 
     com_matrix = np.zeros((len(S), len(S)), dtype=int)
 
@@ -107,7 +109,7 @@ if __name__ == "__main__":
         for j in range(com_matrix.shape[1]):
             com_matrix[i][j] = max_common_part(S[i], S[j])
 
-    solution = greedyLagHeuristic(S, None, 100, 8, commons_matrix=com_matrix)
+    solution = greedyLagHeuristic(S, None, 400, 8, commons_matrix=com_matrix)
 
     print(solution)
 

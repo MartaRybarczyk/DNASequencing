@@ -115,6 +115,7 @@ def choose_next_oligo(oligo_prec, S, alg='greedy', use_phermone=False, phermone_
     elif alg == 'greedy_lag':
         #
         if prec_com:
+            # print('A')
             tmp = [[commons_matrix[index_prec][i] + max([commons_matrix[i][j] for j in S if j != i]), i] for i in S]
         tmp = [[max_common_part(oligo_prec, S[i]) + max([max_common_part(S[i], S[j]) for j in S if j != i]), i] for i in S]
         return sorted(tmp, key=lambda it: it[0])[-1][1]
