@@ -4,6 +4,7 @@ import copy
 
 from src.constants import acid_map, det_rate, rcl_card
 from src.sequenceFactory import generateSampleOligo
+from src.constants import MAX_OLIGO_LEN
 # import src.phermone_interface as phermone
 
 def max_common_part(oligo_prec, oligo_succ):
@@ -113,11 +114,16 @@ def choose_next_oligo(oligo_prec, S, alg='greedy', use_phermone=False, phermone_
                 m = com
         return key
     elif alg == 'greedy_lag':
-        #
-        if prec_com:
+        tmp = None
+        if prec_com == True:
             # print('A')
-            tmp = [[commons_matrix[index_prec][i] + max([commons_matrix[i][j] for j in S if j != i]), i] for i in S]
-        tmp = [[max_common_part(oligo_prec, S[i]) + max([max_common_part(S[i], S[j]) for j in S if j != i]), i] for i in S]
+            # tmp = [[commons_matrix[index_prec][i] + max([commons_matrix[i][j] for j in S if j != i]), i] for i in S]
+            tmp = commons_matrix[index_prec] + np.max(commons_matrix, axis=1)
+            for key in S:
+                tmp[key] += MAX_OLIGO_LEN
+            return np.argmax(tmp)
+        else:
+            tmp = [[max_common_part(oligo_prec, S[i]) + max([max_common_part(S[i], S[j]) for j in S if j != i]), i] for i in S]
         return sorted(tmp, key=lambda it: it[0])[-1][1]
 
 def objective_function(solution):

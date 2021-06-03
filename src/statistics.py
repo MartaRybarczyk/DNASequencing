@@ -28,7 +28,7 @@ def gather_statistics(limit=None, init=False):
     scores["kbs"] = constants.kbs
     scores["max duration"] = constants.MAX_DURATION
     scores["conv threshold"] = constants.CONV_THRESHOLD
-    scores["description"] = "ant colony applied, initial oligo is random, only instances with length 200"
+    scores["description"] = "greedy-lag applied, initial oligo is not random"
     scores["files"] = {}
 
     #for each error rate instances
@@ -46,8 +46,6 @@ def gather_statistics(limit=None, init=False):
 
         for file, file_sequence in zip(data_files, target_sequences):
             
-            if file[:3] != "200":
-                continue
             if cnt == limit:
                 break
 
@@ -62,12 +60,14 @@ def gather_statistics(limit=None, init=False):
 
             stats["n"] = n
             stats["l"] = l
-            
+
+            com_matrix = np.zeros((len(S), len(S)), dtype=int)
+
             timer_start = time.time()
             if init == False:
                 solution = ACO_metaheuristic(S, n, l, gather_stats=True, stats=stats)
             else:
-                com_matrix = np.zeros((len(S), len(S)), dtype=int)
+                
 
                 for i in range(com_matrix.shape[0]):
                     for j in range(com_matrix.shape[1]):
@@ -83,11 +83,11 @@ def gather_statistics(limit=None, init=False):
             stats["quality-needleman"] = solutionQuality(solution, target_seq, n, l, name='needleman-wunsch')
 
             scores["files"][e_rate][file] = stats
-            cnt += 1         
-            # print(stats)   
+            cnt += 1   
+            print(file)        
 
     print(json.dumps(scores))
 
 if __name__ == "__main__":
 
-    gather_statistics(limit=None, init=False)
+    gather_statistics(limit=None, init=True)

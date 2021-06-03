@@ -1,5 +1,6 @@
 import numpy as np
 import copy
+import time
 
 from src.usefullFunctions import choose_next_oligo, max_common_part, find_best_subpath, choose_init_oligo
 from src.solution import Solution, is_valid
@@ -71,7 +72,7 @@ def greedyLagHeuristic(S, init_oligo_index, n, l, commons_matrix=None):
     solution = Solution()
 
     if init_oligo_index is None:
-        init = choose_init_oligo(copyS, 'random')
+        init = choose_init_oligo(copyS, 'worst_best')
         solution.add_oligo(copyS.pop(init), init)
         if prec_com:
             commons_matrix[init][init] = -1
@@ -80,18 +81,22 @@ def greedyLagHeuristic(S, init_oligo_index, n, l, commons_matrix=None):
     
     solution_l = 1
 
-    while solution.path_len < n and len(copyS) > 1:
+    start = time.time()
+    duration = 0
+
+    while solution.path_len < n and len(copyS) > 1 and duration < 20:
         
         last_vertex = solution.graph_path[-1]
-
-        index = choose_next_oligo(solution.path[-1], copyS, 'greedy_lag', commons_matrix=com_matrix, index_prec=last_vertex)
+        
+        # ss = time.time()
+        index = choose_next_oligo(solution.path[-1], copyS, 'greedy_lag', commons_matrix=commons_matrix, index_prec=last_vertex)
+        # print(time.time() -ss)
         solution_l += 1
         solution.add_oligo(copyS.pop(index), index)
         if prec_com:
             commons_matrix[index][index] = -1
 
-    # if solution.path_len < n:
-    #     solution.add_oligo(copyS[0])
+        duration = time.time() - start
 
     if solution.path_len > n:
         find_best_subpath(solution, n)
@@ -101,7 +106,7 @@ def greedyLagHeuristic(S, init_oligo_index, n, l, commons_matrix=None):
 
 if __name__ == "__main__":
 
-    init_oligo, last_oligo, S = generateSampleOligo(8, 400, initial_oligo=False, last_oligo=False)
+    init_oligo, last_oligo, S = generateSampleOligo(10, 600, initial_oligo=False, last_oligo=False)
 
     com_matrix = np.zeros((len(S), len(S)), dtype=int)
 
@@ -109,8 +114,8 @@ if __name__ == "__main__":
         for j in range(com_matrix.shape[1]):
             com_matrix[i][j] = max_common_part(S[i], S[j])
 
-    solution = greedyLagHeuristic(S, None, 400, 8, commons_matrix=com_matrix)
+    solution = greedyLagHeuristic(S, None, 600, 10, commons_matrix=com_matrix)
 
     print(solution)
 
-    print(is_valid(solution, S))
+    print(is_valid(solution, S))      
