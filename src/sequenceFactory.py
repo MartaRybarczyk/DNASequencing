@@ -1,7 +1,7 @@
 import numpy as np
 import random
 import time
-from src.constants import acid_rev_map
+from src.constants import acid_rev_map, acid_map
 
 random.seed(time.time())
 
@@ -88,8 +88,48 @@ def get_data_from_file(file):
 #wiem, moze sie wydawać dziwne ze to ma byc slownik ale przy usuwaniu oligo przestawianiu trzeba je jakos 
 #jednoznacznie identyfikowac, stad slownik
 def generateData(n, l, pos_error, neg_error, initial_oligo=True):
-    pass
+
+    init_oligo_index = None
+
+    if l >= n:
+        return [], []
+
+    sequence = [random.randint(0, 3) for i in range(n)]
+
+    begin = int(initial_oligo)
+
+    temp = [sequence[i:i + l] for i in range(begin, n - l)]
+    random.shuffle(temp)
+
+    if initial_oligo==True:
+        temp.insert(0, sequence[0:l])
+        init_oligo_index = 0
+
+    pos_error_oligo_no = int(len(temp) * pos_error)
+    neg_error_oligo_no = int(len(temp) * neg_error)
+
+    for i in range(pos_error_oligo_no):
+        
+        r = random.randint(begin, len(temp) - 1)
+        temp.insert(r, [random.randint(0, 3) for i in range(l)])
+
+    for i in range(neg_error_oligo_no):
+        
+        r = random.randint(begin, len(temp) - 1)
+        temp.pop(r)
+
+    target_seq = ''.join([acid_map[key] for key in sequence])
+
+    data_str = ''
+    data_str += str(n) + '\n' + str(len(temp)) + '\n'
+    for oligo in temp:
+        data_str += ''.join([acid_map[key] for key in oligo]) + '\n'
+
+    return target_seq, data_str
 
 if __name__ == "__main__":
 
-    print(generateSampleOligo(3, 6))
+    target_seq, data_str = generateData(12, 3, 1, 0)
+
+    print(target_seq)
+    print(data_str)

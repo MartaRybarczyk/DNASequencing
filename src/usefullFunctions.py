@@ -1,10 +1,12 @@
 import numpy as np
 import random
 import copy
+import os
 
 from src.constants import acid_map, det_rate, rcl_card
 from src.sequenceFactory import generateSampleOligo
-from src.constants import MAX_OLIGO_LEN
+from src.constants import MAX_OLIGO_LEN, init_det_rate, init_crd, det_rate, kib, kbs, krb, NF, NB, rcl_card, MAX_DURATION, rho
+from src import constants
 # import src.phermone_interface as phermone
 
 def max_common_part(oligo_prec, oligo_succ):
@@ -26,12 +28,29 @@ def find_best_subpath(solution, n):
     """
     pass
 
-def choose_init_oligo(S, alg='random'):
+def choose_init_oligo(S, alg='random', com_matrix=None):
 
     if alg=='worst_best':
-        Sbs = []
-        Swp = []
         best_succ_prec = {}
+
+        if com_matrix is not None:
+            best_succ_prec = np.zeros((len(S), 3), int)
+            for i in range(np.shape(best_succ_prec)[0]):
+                best_succ_prec[i][1] = np.max(com_matrix[i])
+                best_succ_prec[i][0] = np.max(com_matrix[:, i])
+                best_succ_prec[i][2] = i
+
+            best_succ_prec = sorted(best_succ_prec, key=lambda item: -(1000 * -item[0] + item[1]))
+            # print(best_succ_prec[:10])
+
+            r = random.random()
+            # print(init_det_rate)
+            if r < init_det_rate:
+                # print('fast',best_succ_prec[0][2])
+                return best_succ_prec[0][2]
+            else:
+                # print('random')
+                return best_succ_prec[random.randint(0, init_crd - 1)][2]
 
         for oligo1 in S:
             best_succ_prec[oligo1] = [-1, -1]
@@ -57,6 +76,7 @@ def choose_init_oligo(S, alg='random'):
                     min_max[1] = best_succ_prec[oligo][1]
 
                     key = oligo
+        print('slow',key)
         return key
 
     return random.randint(0, len(S) - 1)
@@ -183,5 +203,61 @@ def levenshteinDistance(a, b):
 
     return d[n][m]
 
+def set_global_parameters(_max_duration=10, _crd_list=3, _nf=6, _nb=0,
+        _kib=0.3, _krb=0.3, _kbs=0.3, _det_rate=0.95, _init_det_rate=0.8, _init_crd=3
+    ):
+    global MAX_DURATION, rcl_card, NF, NB, kib, kbs, krb, det_rate, init_det_rate, init_crd
+
+    MAX_DURATION = _max_duration
+    rcl_card = _crd_list
+    NF = _nf
+    NB = _nb
+    kib = _kib
+    krb = _krb
+    kbs = _kbs
+    det_rate = _det_rate
+    init_det_rate = _init_det_rate
+    # constants.set_init_det_rate(_init_det_rate)
+    init_crd = _init_crd
+
+def get_file_list(dna_files_paths, seq_files_paths, limit=None, shuff=False):
+
+    files = []
+
+    for dna_path, seq_path in zip(dna_files_paths, seq_files_paths):
+        dna_files = os.listdir(dna_path)
+        seq_files = os.listdir(seq_path)
+
+        dna_files.sort()
+        seq_files.sort()
+
+        if len(dna_files) != len(seq_files):
+            print('missing file')
+            return None
+        
+        for i in range(len(dna_files)):
+            files.append(
+                (
+                    dna_path + '/' + dna_files[i],
+                    seq_path + '/' + seq_files[i]
+                )
+            )
+    
+    if shuff == True:
+        random.shuffle(files)
+
+    if limit is not None:
+        files = files[: min(len(files), limit)]
+
+
+
+    return files
+
 if __name__ == "__main__":
-    pass
+    
+    work_path = os.path.dirname(os.path.realpath(__file__))
+
+    dna_files_paths = [work_path + '/../testFiles/benchmark/error_rate_5/stand5/5']
+    seq_files_paths = [work_path + '/../testFiles/benchmark/error_rate_5/sequence']
+
+    print(get_file_list(dna_files_paths, seq_files_paths, limit=2))

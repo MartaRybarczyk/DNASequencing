@@ -1,0 +1,1 @@
+{"0": {"nf": 2, "nb": 0, "rcl_card": 3, "rho": 0.01, "kib": 0.3, "krb": 0.3, "kbs": 0.3, "max duration": 10, "conv threshold": 0.9999, "quality": 0.6710963455149501}}

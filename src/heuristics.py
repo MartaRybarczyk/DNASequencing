@@ -3,11 +3,12 @@ import copy
 import time
 
 from src.usefullFunctions import choose_next_oligo, max_common_part, find_best_subpath, choose_init_oligo
-from src.solution import Solution, is_valid
+from src.solution import Solution, is_valid, solutionQuality
 from src.sequenceFactory import generateSampleOligo
 from src.constants import MAX_OLIGO_LEN
 
-def greedyHeuristic(S, init_oligo_index=None, n=None, l=None, choose_next_alg='greedy', use_phermone=False, phermone_model=None, backward=False,
+def greedyHeuristic(S, init_oligo_index=None, n=None, l=None, choose_init_alg='worst_best',
+        choose_next_alg='greedy', use_phermone=False, phermone_model=None, backward=False,
         commons_matrix=None    
     ):
 
@@ -28,7 +29,7 @@ def greedyHeuristic(S, init_oligo_index=None, n=None, l=None, choose_next_alg='g
     if init_oligo_index is not None:
         solution.add_oligo(copyS[init_oligo_index], vertex_no=init_oligo_index)
     else:
-        init = choose_init_oligo(copyS, 'greedy')
+        init = choose_init_oligo(copyS, alg=choose_init_alg, com_matrix=commons_matrix)
         solution.add_oligo(copyS.pop(init), vertex_no=init)
         if precomputed_com == True:
             commons_matrix[init][init] = -1
@@ -72,7 +73,7 @@ def greedyLagHeuristic(S, init_oligo_index, n, l, commons_matrix=None):
     solution = Solution()
 
     if init_oligo_index is None:
-        init = choose_init_oligo(copyS, 'worst_best')
+        init = choose_init_oligo(copyS, 'worst_best', com_matrix=commons_matrix)
         solution.add_oligo(copyS.pop(init), init)
         if prec_com:
             commons_matrix[init][init] = -1

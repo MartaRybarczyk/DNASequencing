@@ -1,5 +1,5 @@
 from src import heuristics, solution, constants
-from src.usefullFunctions import objective_function, roundFloat
+from src.usefullFunctions import objective_function, roundFloat, max_common_part, set_global_parameters
 import numpy as np
 import math
 from copy import deepcopy
@@ -94,6 +94,12 @@ def ACO_metaheuristic(S, n, l, initial_oligo=None, debug=False, gather_stats=Fal
 
     phermone_copy = deepcopy(phermone_matrix) # this matrix will change within one iteration
 
+    edge_matrix = np.zeros((len(S), len(S)), dtype=int)
+
+    for i in range(edge_matrix.shape[0]):
+        for j in range(edge_matrix.shape[1]):
+            edge_matrix[i][j] = max_common_part(S[i], S[j])
+
     algorithm_start = time.time()
     duration = 0
     while terminate_search(duration) == False:
@@ -111,7 +117,10 @@ def ACO_metaheuristic(S, n, l, initial_oligo=None, debug=False, gather_stats=Fal
 
         pib = solution.Solution()
         for i in range(nf):
-            current_solution = heuristics.greedyHeuristic(S, initial_oligo, n, l, use_phermone=True, phermone_model=phermone_matrix)
+            current_solution = heuristics.greedyHeuristic(
+                S, initial_oligo, n, l, use_phermone=True, phermone_model=phermone_matrix, 
+                commons_matrix=edge_matrix
+            )
             if objective_function(current_solution) > objective_function(pib):
                 pib = deepcopy(current_solution)
         for i in range(nb):
@@ -166,12 +175,24 @@ if __name__ == "__main__":
     work_path = os.path.dirname(os.path.realpath(__file__))
     stats = {}
     
-    n, l, S = get_data_from_file(work_path + '/../testFiles/benchmark/error_rate_5/stand5/5/200_02')
+    set_global_parameters(
+        _max_duration=10,
+        _crd_list=7,
+        _nf=2,
+        _nb=0,
+        _det_rate=0.70,
+        _init_det_rate=0.95
+    )
+
+    n, l, S = get_data_from_file(work_path + '/../testFiles/benchmark/error_rate_20/stand20/20/400_29')
+
+    with open(work_path + '/../testFiles/benchmark/error_rate_20/sequence/400_29.seq', 'r') as f:
+        seq = f.read()
 
     result = ACO_metaheuristic(S, n, l, debug=True, gather_stats=True, stats=stats)
 
     print(result)
-    print(result.graph_path)
-    print(stats)
 
-    print(solution.is_valid(result, S))
+    print('quality:', solution.solutionQuality(result, seq, n, l, name='needleman-wunsch'))
+
+    print('valid:', solution.is_valid(result, S))
