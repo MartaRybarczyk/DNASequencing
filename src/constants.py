@@ -8,20 +8,20 @@ MAX_OLIGO_LEN = 100
 # metaheuristic
 rcl_card = 3 # restricted candidate list cardinality
 det_rate = 0.95 # determinism rate
-init_det_rate = 1
-init_crd = 5
+init_det_rate = 0.25
+init_crd = 20
 rho = 0.01    # learning rate
 kib = 0.3
 krb = 0.3
-kbs = 0.3
+kbs = 0.4
 
 def set_init_det_rate(val):
     global init_det_rate
     init_det_rate = val
 
-MAX_DURATION = 10
+MAX_DURATION = 20
 
-NF = 6
+NF = 3
 NB = 0
 
 CONV_THRESHOLD = 0.9999

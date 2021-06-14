@@ -16,6 +16,8 @@ def apply_phermone_update(cf, bs_update, T, pib, prb, pbs):
     m = m1 + m2 + m3
     T += constants.rho * (m - T)
 
+    T = np.clip(T, 0.01, 0.99)
+
 def delta(solution, array):
 
     for i in range(1, len(solution.graph_path) - 1):
@@ -154,7 +156,8 @@ def ACO_metaheuristic(S, n, l, initial_oligo=None, debug=False, gather_stats=Fal
         if conv_factor > constants.CONV_THRESHOLD:
             if bs_update == True:
                 reset_phermone_values(phermone_matrix)
-                stats["resetNo"] += 1
+                if stats is not None:
+                    stats["resetNo"] += 1
                 if debug:
                     print('Reset phermone values.')
                 prb = None
@@ -176,17 +179,19 @@ if __name__ == "__main__":
     stats = {}
     
     set_global_parameters(
-        _max_duration=10,
-        _crd_list=7,
-        _nf=2,
+        _max_duration=20,
+        _crd_list=3,
+        _nf=3,
         _nb=0,
-        _det_rate=0.70,
-        _init_det_rate=0.95
+        _det_rate=0.95,
+        _init_det_rate=0.25,
+        _init_crd=20,
+        _kib=0.3, _krb=0.3, _kbs=0.4
     )
 
-    n, l, S = get_data_from_file(work_path + '/../testFiles/benchmark/error_rate_20/stand20/20/400_29')
+    n, l, S = get_data_from_file(work_path + '/../testFiles/benchmark/error_rate_20/stand20/20/400_10')
 
-    with open(work_path + '/../testFiles/benchmark/error_rate_20/sequence/400_29.seq', 'r') as f:
+    with open(work_path + '/../testFiles/benchmark/error_rate_20/sequence/400_10.seq', 'r') as f:
         seq = f.read()
 
     result = ACO_metaheuristic(S, n, l, debug=True, gather_stats=True, stats=stats)

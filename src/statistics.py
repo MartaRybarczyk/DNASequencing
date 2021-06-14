@@ -10,9 +10,9 @@ import json
 import time
 import numpy as np
 
-def gather_statistics(limit=None, init=False, random_files=False):
+def gather_statistics(limit=None, init=False, random_files=False, set_name='benchmark'):
 
-    absolute_benchmark_path = os.path.dirname(os.path.realpath(__file__)) + '/../testFiles/benchmark'
+    absolute_benchmark_path = os.path.dirname(os.path.realpath(__file__)) + '/../testFiles/' + set_name
 
     error_rate = ['5', '10', '20']
     cnt = 0
@@ -31,10 +31,18 @@ def gather_statistics(limit=None, init=False, random_files=False):
     scores["description"] = "greedy heuristic tested"
     scores["files"] = {}
 
+    relative_path_oligo = ''
+    relative_path_sequence = ''
+
     #for each error rate instances
     for e_rate in error_rate:
+        
 
-        relative_path_oligo = '/error_rate_{}/stand{}/{}'.format(e_rate, e_rate, e_rate)
+        if set_name == 'benchmark':
+            relative_path_oligo = '/error_rate_{}/stand{}/{}'.format(e_rate, e_rate, e_rate)
+        else:
+            relative_path_oligo = '/error_rate_{}/oligo'.format(e_rate)
+
         relative_path_sequence = '/error_rate_{}/sequence'.format(e_rate)
         data_files = os.listdir(absolute_benchmark_path + relative_path_oligo)
         target_sequences = os.listdir(absolute_benchmark_path + relative_path_sequence)
@@ -65,17 +73,17 @@ def gather_statistics(limit=None, init=False, random_files=False):
 
             timer_start = time.time()
             if init == False:
-                solution = ACO_metaheuristic(S, n, l, gather_stats=True, stats=stats)
+                solution = ACO_metaheuristic(S, n, l,initial_oligo=0, gather_stats=True, stats=stats)
             else:
                 
 
                 for i in range(com_matrix.shape[0]):
                     for j in range(com_matrix.shape[1]):
                         com_matrix[i][j] = max_common_part(S[i], S[j])
-                # solution = greedyLagHeuristic(S, None, n, l, commons_matrix=com_matrix)
+                # solution = greedyLagHeuristic(S, 0, n, l,  commons_matrix=com_matrix)
 
                 solution = greedyHeuristic(
-                    S, n=n, l=l, choose_init_alg='worst_best'
+                    S, n=n, l=l, init_oligo_index=0
                 )
 
             stats["time"] = time.time() - timer_start
@@ -94,14 +102,14 @@ def gather_statistics(limit=None, init=False, random_files=False):
 def meta_tuning(file_list, output_file=None,
         det_rate_list=[constants.det_rate], init_det_rate_list=[constants.init_det_rate], 
         _rcl_list=[constants.rcl_card], duration_list=[constants.MAX_DURATION], _nf_list=[constants.NF],
-        _nb_list=[constants.NB], _init_crd_list=[constants.init_crd]
+        _nb_list=[constants.NB], _init_crd_list=[constants.init_crd], k_coeff_list=[[0.3, 0.3, 0.3]]
     ):
 
     output_results = {}
 
     it = 0
 
-    number_of_iter = len(_init_crd_list) *len(det_rate_list) * len(init_det_rate_list) * len(_rcl_list) * len(duration_list) * len(_nf_list) * len(_nb_list)
+    number_of_iter = len(_init_crd_list) *len(det_rate_list) * len(init_det_rate_list) * len(_rcl_list) * len(duration_list) * len(_nf_list) * len(_nb_list) * len(k_coeff_list)
     max_time_of_iter = len(file_list) * max(duration_list)
     max_total_time = number_of_iter * max_time_of_iter
     print('Begin computation, number of iterations: ',number_of_iter)
@@ -114,6 +122,7 @@ def meta_tuning(file_list, output_file=None,
     output_results["init rcl card"] = _init_crd_list
     output_results["rcl card"] = _rcl_list
     output_results["iterations"] = {}
+    output_results["duration list"] = duration_list
 
     for __det_rate in det_rate_list:
         for __init_det_rate in init_det_rate_list:
@@ -122,50 +131,52 @@ def meta_tuning(file_list, output_file=None,
                     for __nf in _nf_list:
                         for __nb in _nb_list:
                             for __init_card in _init_crd_list:
+                                for k_s in k_coeff_list:
                             
-                                print('Iteration no.', it)
+                                    print('Iteration no.', it)
 
-                                global_quality = 0
+                                    global_quality = 0
 
-                                set_global_parameters(
-                                    _max_duration=__duration,
-                                    _crd_list=__rcl_card,
-                                    _nf=__nf,
-                                    _nb=__nb,
-                                    _det_rate=__det_rate,
-                                    _init_det_rate=__init_det_rate,
-                                    _init_crd=__init_card
-                                )
-                                scores = {}
+                                    set_global_parameters(
+                                        _max_duration=__duration,
+                                        _crd_list=__rcl_card,
+                                        _nf=__nf,
+                                        _nb=__nb,
+                                        _det_rate=__det_rate,
+                                        _init_det_rate=__init_det_rate,
+                                        _init_crd=__init_card,
+                                        _kib=k_s[0],_krb=k_s[1], _kbs=k_s[2]
+                                    )
+                                    scores = {}
 
-                                scores["nf"] = __nf
-                                scores["nb"] = __nb
-                                scores["rcl_card"] = __rcl_card
-                                scores["rho"] = constants.rho
-                                scores["kib"] = constants.kib
-                                scores["krb"] = constants.krb
-                                scores["kbs"] = constants.kbs
-                                scores["max duration"] = __duration
-                                scores["conv threshold"] = constants.CONV_THRESHOLD   
-                                scores["determinism rate"] = __det_rate
-                                scores["init det. rate"] = __init_det_rate
-                                scores["init det. card"] = __init_card
+                                    scores["nf"] = __nf
+                                    scores["nb"] = __nb
+                                    scores["rcl_card"] = __rcl_card
+                                    scores["rho"] = constants.rho
+                                    scores["kib"] = k_s[0]
+                                    scores["krb"] = k_s[1]
+                                    scores["kbs"] = k_s[2]
+                                    scores["max duration"] = __duration
+                                    scores["conv threshold"] = constants.CONV_THRESHOLD   
+                                    scores["determinism rate"] = __det_rate
+                                    scores["init det. rate"] = __init_det_rate
+                                    scores["init det. card"] = __init_card
 
-                                for data_file, seq_file in file_list:
-                                    with open(seq_file, 'r') as f:
-                                        target_seq = f.read()
+                                    for data_file, seq_file in file_list:
+                                        with open(seq_file, 'r') as f:
+                                            target_seq = f.read()
 
-                                    n, l, S = get_data_from_file(data_file)
+                                        n, l, S = get_data_from_file(data_file)
 
-                                    solution = ACO_metaheuristic(S, n, l)
+                                        solution = ACO_metaheuristic(S, n, l)
 
-                                    global_quality += solutionQuality(solution, target_seq, n, l, name='needleman-wunsch')
+                                        global_quality += solutionQuality(solution, target_seq, n, l, name='needleman-wunsch')
 
-                                scores['quality'] = global_quality / len(file_list)
+                                    scores['quality'] = global_quality / len(file_list)
 
-                                
-                                output_results["iterations"][it] = scores
-                                it += 1
+                                    
+                                    output_results["iterations"][it] = scores
+                                    it += 1
     
     if output_file is None:
         print(output_results)
@@ -187,11 +198,13 @@ if __name__ == "__main__":
     ]
 
     
-    # gather_statistics(limit=None, init=True)
+    gather_statistics(limit=None, init=False, set_name='our_set')
 
-    file_list = get_file_list(dna_files_paths, seq_files_paths, limit=60, shuff=True)
-    print(file_list)
+    # file_list = get_file_list(dna_files_paths, seq_files_paths, limit=60, shuff=True)
+    # print(file_list)
 
-    meta_tuning(
-        file_list, duration_list=[5], det_rate_list=[0.25, 0.6, 0.8, 0.95], _rcl_list=[3, 5, 10, 20], output_file='_det_corr.txt'
-    )
+    # meta_tuning(
+    #     file_list, duration_list=[5], det_rate_list=[0.95], _rcl_list=[3], output_file='_k_coeff2.txt', init_det_rate_list=[0.25],
+    #     _init_crd_list=[10], _nf_list=[7], k_coeff_list=[[0.2, 0.2, 0.6], [0.3, 0.3, 0.4], [0.4, 0.4, 0.2],
+    #         [0.5, 0.3, 0.2], [0.6, 0.3, 0.1]]
+    # )

@@ -96,23 +96,31 @@ def choose_next_oligo(oligo_prec, S, alg='greedy', use_phermone=False, phermone_
         # construct restricted candidate list
 
         # simplest version
-        temp = np.zeros((np.size(phermone_values), 2))
+        temp = np.zeros((np.size(phermone_values), 2)) - np.inf
         for key in S:
             if prec_com:
                 temp[key][0] = commons_matrix[index_prec][key] / (len(S[key]) - 1)
             else:
                 temp[key][0] = max_common_part(oligo_prec, S[key]) / (len(S[key]) - 1)
-            temp[key][1] = key
+            temp[key][1] = key   
 
         temp[:,0] = phermone_values * (temp[:, 0] ** 5)
+
+        temp = np.delete(temp, np.where(temp[:,0] == -np.inf), axis=0)
         temp = np.array(sorted(temp, key=lambda it: it[0]))
+
         restricted_list = temp[-min(temp.shape[0], rcl_card):]
-        if(random.random() > det_rate):
+        # print(restricted_list)
+        if(random.random() < det_rate):
             # return best oligo
-            return int(restricted_list[np.argmax(restricted_list[:, 1])][1])
+            return int(restricted_list[np.argmax(restricted_list[:, 0])][1])
+        
+        # some safety
+        if np.sum(restricted_list[:, 0]) < 0.000000001:
+            return int(restricted_list[0][1])
 
         # roulette-wheel selection
-        prob = restricted_list[:,0] / sum(restricted_list[:,0])
+        prob = restricted_list[:,0] / np.sum(restricted_list[:,0])
         for i in range(1, len(prob)):
             prob[i] += prob[i - 1]
         r = random.random()
