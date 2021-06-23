@@ -1,4 +1,4 @@
-name: Python package
+name: Build and Tests 3.7 3.8
 
 on: [push]
 
