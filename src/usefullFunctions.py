@@ -212,7 +212,7 @@ def levenshteinDistance(a, b):
     return d[n][m]
 
 def set_global_parameters(_max_duration=10, _crd_list=3, _nf=6, _nb=0,
-        _kib=0.3, _krb=0.3, _kbs=0.3, _det_rate=0.95, _init_det_rate=0.8, _init_crd=3
+        _kib=0.3, _krb=0.3, _kbs=0.3, _det_rate=0.95, _init_det_rate=0.25, _init_crd=20
     ):
     global MAX_DURATION, rcl_card, NF, NB, kib, kbs, krb, det_rate, init_det_rate, init_crd
 

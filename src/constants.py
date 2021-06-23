@@ -19,7 +19,7 @@ def set_init_det_rate(val):
     global init_det_rate
     init_det_rate = val
 
-MAX_DURATION = 20
+MAX_DURATION = 5
 
 NF = 3
 NB = 0
