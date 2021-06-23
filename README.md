@@ -4,7 +4,7 @@
 
 ## Overview
 
-This is implementation of ant colony optimization algorithm applied to DNA sequencig problem by hybridzation. 
+This is implementation of ant colony optimization algorithm applied to DNA sequencing problem by hybridzation. 
 
 ## Setup
 Go to the main directory of the project.
@@ -20,5 +20,4 @@ For more options type
 ```
 python main.py -h
 ```
-
 where instead of <DATA_FILE> you should place your file with input for algorithm. Example of how the <DATA_FILE> should look like is in a `demo_file.txt`.
