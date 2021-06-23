@@ -4,7 +4,7 @@
 
 ## Overview
 
-This is implementation of ant colony optimization algorithm applied to DNA sequencing problem by hybridzation. 
+This is implementation of ant colony optimization algorithm applied to DNA sequencing problem by hybridization. 
 
 ## Setup
 Go to the main directory of the project.
