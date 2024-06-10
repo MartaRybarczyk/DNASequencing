@@ -1,6 +1,6 @@
 from src.metaheuristic import ACO_metaheuristic
 from src.usefullFunctions import set_global_parameters
-from src.sequenceFactory import get_data_from_file
+from src.sequenceFactory import get_data_from_file, get_data_from_xml
 from src.solution import Solution, solutionQuality
 from src.constants import MAX_DURATION, NF
 
@@ -27,14 +27,15 @@ if __name__ == "__main__":
         print('No data file found, please add it with --file option.')
     else:
 
-        n, l, S = get_data_from_file(args.file)
-        init = None
-
-        if args.initial is not None and int(args.initial) >=0 and int(args.initial) < n - l + 1:
-            init = int(args.initial)
+        n, l, S, range_of_appearance, starting_oligo = get_data_from_xml(args.file)
+        #n, l, S = get_data_from_file(args.file)
+        
+        #init = None
+        #if args.initial is not None and int(args.initial) >=0 and int(args.initial) < n - l + 1:
+        #    init = int(args.initial)
 
         solution = ACO_metaheuristic(
-            S, n, l, initial_oligo=init
+            S, n, l, initial_oligo=starting_oligo
         )
 
         print(solution)

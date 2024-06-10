@@ -76,6 +76,51 @@ def get_data_from_file(file):
         
     return n, l, S
 
+
+def get_data_from_xml(file):
+
+    """
+    ## Parse data from file
+    First line of the file represents length of the DNA sequence,
+    next line is the number K of oligo, which are in the next K lines as string of letters A,C,T,G each.
+    ## Return:
+    - n: target lenth of the sequence
+    - l: length of one oligo
+    - S: dictionary of oligo
+    """
+
+    S = {}
+    n = 0
+    l = 0
+    starting_oligo = -1
+
+    with open(file, 'r') as f:
+        text = f.readlines()
+    
+
+    params = text[0].split()[2:]
+    n = int(params[0].split("\"")[1])
+
+    starting_oligo_str = params[1].split("\"")[1]
+
+
+    all_known = [[int(i.split("\"")[1]), int(i.split("\"")[3]), i.split(">")[1].split("<")[0]] for i in text[2:-2]]
+    #all_known.sort()
+
+    range_of_appearance = {}
+    for oligo_data in all_known:
+        range_of_appearance[oligo_data[2]] = [oligo_data[0], oligo_data[1]]
+
+    for it, oligo_data in enumerate(all_known):
+        S[it] = [acid_rev_map[letter] for letter in oligo_data[2].strip()]
+        if(oligo_data[2] == starting_oligo_str):
+            starting_oligo = it
+
+    l = len(all_known[0][2])
+        
+    return n, l, S, range_of_appearance, starting_oligo
+
+
 def generateData(n, l, pos_error, neg_error, initial_oligo=True):
 
     pos_error /= 100
