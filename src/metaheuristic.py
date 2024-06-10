@@ -52,7 +52,7 @@ def terminate_search(duration):
 
     return False
 
-def ACO_metaheuristic(S, n, l, initial_oligo=None, debug=False, gather_stats=False, stats=None):
+def ACO_metaheuristic(range_of_appearance, S, n, l, initial_oligo=None, debug=False, gather_stats=False, stats=None):
     """
     ## Ant Cology Optimization algorithm.\n
     ### Parameters:
@@ -120,14 +120,14 @@ def ACO_metaheuristic(S, n, l, initial_oligo=None, debug=False, gather_stats=Fal
         pib = solution.Solution()
         for i in range(nf):
             current_solution = heuristics.greedyHeuristic(
-                S, initial_oligo, n, l, use_phermone=True, phermone_model=phermone_matrix, 
+                range_of_appearance, S, initial_oligo, n, l, use_phermone=True, phermone_model=phermone_matrix, 
                 commons_matrix=edge_matrix
             )
             if objective_function(current_solution) > objective_function(pib):
                 pib = deepcopy(current_solution)
         for i in range(nb):
             current_solution = heuristics.greedyHeuristic(
-                S, initial_oligo, n, l, use_phermone=True, phermone_model=phermone_matrix,
+                range_of_appearance, S, initial_oligo, n, l, use_phermone=True, phermone_model=phermone_matrix,
                 backward=True
             )
             if objective_function(current_solution) > objective_function(pib):

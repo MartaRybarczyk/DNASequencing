@@ -14,12 +14,9 @@ def set_params(_max_duration=5, _nf=3):
 
 parser = argparse.ArgumentParser(description='Builds DNA strand of given set of oligonucleotides using ant colony optimization algorithm.')
 parser.add_argument('file', help='file with set of oligonucleotides')
-parser.add_argument('--initial', help='if known, index of initial oligonucleotide of given set')
+#parser.add_argument('--initial', help='if known, index of initial oligonucleotide of given set')
 
 if __name__ == "__main__":
-
-
-
     args = parser.parse_args()
 
     print(args)
@@ -35,7 +32,7 @@ if __name__ == "__main__":
         #    init = int(args.initial)
 
         solution = ACO_metaheuristic(
-            S, n, l, initial_oligo=starting_oligo
+            range_of_appearance, S, n, l, initial_oligo=starting_oligo
         )
 
         print(solution)

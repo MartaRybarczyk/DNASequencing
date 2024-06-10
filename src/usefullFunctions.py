@@ -81,7 +81,7 @@ def choose_init_oligo(S, alg='random', com_matrix=None):
 
     return random.randint(0, len(S) - 1)
 
-def choose_next_oligo(oligo_prec, S, alg='greedy', use_phermone=False, phermone_model=None, commons_matrix=None, index_prec=None):
+def choose_next_oligo(solution_c, range_of_appearance, oligo_prec, S, alg='greedy', use_phermone=False, phermone_model=None, commons_matrix=None, index_prec=None):
     """
     Return index / key of set S, which corresponds to best oligo
     """ 
@@ -98,11 +98,13 @@ def choose_next_oligo(oligo_prec, S, alg='greedy', use_phermone=False, phermone_
         # simplest version
         temp = np.zeros((np.size(phermone_values), 2)) - np.inf
         for key in S:
-            if prec_com:
-                temp[key][0] = commons_matrix[index_prec][key] / (len(S[key]) - 1)
-            else:
-                temp[key][0] = max_common_part(oligo_prec, S[key]) / (len(S[key]) - 1)
-            temp[key][1] = key   
+            oligo_str = "".join([acid_map[i] for i in S[key]])
+            if(range_of_appearance[oligo_str][0] <= solution_c and range_of_appearance[oligo_str][1] >= solution_c):
+                if prec_com:
+                    temp[key][0] = commons_matrix[index_prec][key] / (len(S[key]) - 1)
+                else:
+                    temp[key][0] = max_common_part(oligo_prec, S[key]) / (len(S[key]) - 1)
+                temp[key][1] = key   
 
         temp[:,0] = phermone_values * (temp[:, 0] ** 5)
 
@@ -110,14 +112,17 @@ def choose_next_oligo(oligo_prec, S, alg='greedy', use_phermone=False, phermone_
         temp = np.array(sorted(temp, key=lambda it: it[0]))
 
         restricted_list = temp[-min(temp.shape[0], rcl_card):]
-        # print(restricted_list)
+        # print("restricted list:")
+        
         if(random.random() < det_rate):
             # return best oligo
-            return int(restricted_list[np.argmax(restricted_list[:, 0])][1])
+            #print(restricted_list[np.argmax(restricted_list[:, 0])][1])
+            solution_c += 1
+            return int(restricted_list[np.argmax(restricted_list[:, 0])][1]), solution_c
         
         # some safety
         if np.sum(restricted_list[:, 0]) < 0.000000001:
-            return int(restricted_list[0][1])
+            return int(restricted_list[0][1]), solution_c
 
         # roulette-wheel selection
         prob = restricted_list[:,0] / np.sum(restricted_list[:,0])
@@ -127,7 +132,8 @@ def choose_next_oligo(oligo_prec, S, alg='greedy', use_phermone=False, phermone_
         it = 0
         while(prob[it] < r):
             it += 1
-        return int(restricted_list[it][1])
+        solution_c+=1
+        return int(restricted_list[it][1]), solution_c
 
     if alg == 'greedy':
         m = -1
@@ -140,19 +146,20 @@ def choose_next_oligo(oligo_prec, S, alg='greedy', use_phermone=False, phermone_
             if com > m:
                 key = oligo
                 m = com
-        return key
-    elif alg == 'greedy_lag':
-        tmp = None
-        if prec_com == True:
-            # print('A')
-            # tmp = [[commons_matrix[index_prec][i] + max([commons_matrix[i][j] for j in S if j != i]), i] for i in S]
-            tmp = commons_matrix[index_prec] + np.max(commons_matrix, axis=1)
-            for key in S:
-                tmp[key] += MAX_OLIGO_LEN
-            return np.argmax(tmp)
-        else:
-            tmp = [[max_common_part(oligo_prec, S[i]) + max([max_common_part(S[i], S[j]) for j in S if j != i]), i] for i in S]
-        return sorted(tmp, key=lambda it: it[0])[-1][1]
+        solution_c+=1
+        return key, solution_c
+    # elif alg == 'greedy_lag':
+    #     tmp = None
+    #     if prec_com == True:
+    #         # print('A')
+    #         # tmp = [[commons_matrix[index_prec][i] + max([commons_matrix[i][j] for j in S if j != i]), i] for i in S]
+    #         tmp = commons_matrix[index_prec] + np.max(commons_matrix, axis=1)
+    #         for key in S:
+    #             tmp[key] += MAX_OLIGO_LEN
+    #         return np.argmax(tmp)
+    #     else:
+    #         tmp = [[max_common_part(oligo_prec, S[i]) + max([max_common_part(S[i], S[j]) for j in S if j != i]), i] for i in S]
+    #     return sorted(tmp, key=lambda it: it[0])[-1][1]
 
 def objective_function(solution):
     """
