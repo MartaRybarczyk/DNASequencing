@@ -104,8 +104,6 @@ def choose_next_oligo( solution_l, range_of_appearance, oligo_prec, S, alg='gree
                     temp[key][0] = commons_matrix[index_prec][key] / (len(S[key]) - 1)
                 else:
                     temp[key][0] = max_common_part(oligo_prec, S[key]) / (len(S[key]) - 1)
-            #else:
-            #    temp[key][0] = 0
                 temp[key][1] = key 
         temp[:,0] = phermone_values * (temp[:, 0] ** 5)
 

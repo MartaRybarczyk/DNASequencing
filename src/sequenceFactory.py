@@ -105,6 +105,7 @@ def get_data_from_xml(file):
 
 
     all_known = [[int(i.split("\"")[1]), int(i.split("\"")[3]), i.split(">")[1].split("<")[0]] for i in text[2:-2]]
+    all_known.append([0, len(all_known), starting_oligo_str])
     #all_known.sort()
 
     range_of_appearance = {}
@@ -114,7 +115,7 @@ def get_data_from_xml(file):
     for it, oligo_data in enumerate(all_known):
         S[it] = [acid_rev_map[letter] for letter in oligo_data[2].strip()]
         if(oligo_data[2] == starting_oligo_str):
-            starting_oligo = it
+            starting_oligo = it #gets overwritten if another version of starting oligo is found
 
     l = len(all_known[0][2])
         
