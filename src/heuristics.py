@@ -44,7 +44,7 @@ def greedyHeuristic(range_of_appearance, S, init_oligo_index=None, n=None, l=Non
         phermone_values = None
         if use_phermone == True:
             phermone_values = phermone_model[:, last_vertex]
-        index, solution_c = choose_next_oligo(solution_c, range_of_appearance, solution.path[-1], copyS, choose_next_alg, use_phermone=use_phermone, phermone_model=phermone_values, 
+        index = choose_next_oligo(solution_l, range_of_appearance, solution.path[-1], copyS, choose_next_alg, use_phermone=use_phermone, phermone_model=phermone_values, 
             commons_matrix=commons_matrix, index_prec=last_vertex
         )
 

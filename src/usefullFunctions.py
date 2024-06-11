@@ -81,7 +81,7 @@ def choose_init_oligo(S, alg='random', com_matrix=None):
 
     return random.randint(0, len(S) - 1)
 
-def choose_next_oligo(solution_c, range_of_appearance, oligo_prec, S, alg='greedy', use_phermone=False, phermone_model=None, commons_matrix=None, index_prec=None):
+def choose_next_oligo( solution_l, range_of_appearance, oligo_prec, S, alg='greedy', use_phermone=False, phermone_model=None, commons_matrix=None, index_prec=None):
     """
     Return index / key of set S, which corresponds to best oligo
     """ 
@@ -99,13 +99,14 @@ def choose_next_oligo(solution_c, range_of_appearance, oligo_prec, S, alg='greed
         temp = np.zeros((np.size(phermone_values), 2)) - np.inf
         for key in S:
             oligo_str = "".join([acid_map[i] for i in S[key]])
-            if(range_of_appearance[oligo_str][0] <= solution_c and range_of_appearance[oligo_str][1] >= solution_c):
+            if(range_of_appearance[oligo_str][0] <= solution_l and range_of_appearance[oligo_str][1] >= solution_l):
                 if prec_com:
                     temp[key][0] = commons_matrix[index_prec][key] / (len(S[key]) - 1)
                 else:
                     temp[key][0] = max_common_part(oligo_prec, S[key]) / (len(S[key]) - 1)
-                temp[key][1] = key   
-
+            #else:
+            #    temp[key][0] = 0
+                temp[key][1] = key 
         temp[:,0] = phermone_values * (temp[:, 0] ** 5)
 
         temp = np.delete(temp, np.where(temp[:,0] == -np.inf), axis=0)
@@ -116,13 +117,11 @@ def choose_next_oligo(solution_c, range_of_appearance, oligo_prec, S, alg='greed
         
         if(random.random() < det_rate):
             # return best oligo
-            #print(restricted_list[np.argmax(restricted_list[:, 0])][1])
-            solution_c += 1
-            return int(restricted_list[np.argmax(restricted_list[:, 0])][1]), solution_c
+            return int(restricted_list[np.argmax(restricted_list[:, 0])][1])
         
         # some safety
         if np.sum(restricted_list[:, 0]) < 0.000000001:
-            return int(restricted_list[0][1]), solution_c
+            return int(restricted_list[0][1])
 
         # roulette-wheel selection
         prob = restricted_list[:,0] / np.sum(restricted_list[:,0])
@@ -132,8 +131,7 @@ def choose_next_oligo(solution_c, range_of_appearance, oligo_prec, S, alg='greed
         it = 0
         while(prob[it] < r):
             it += 1
-        solution_c+=1
-        return int(restricted_list[it][1]), solution_c
+        return int(restricted_list[it][1])
 
     if alg == 'greedy':
         m = -1
@@ -146,8 +144,7 @@ def choose_next_oligo(solution_c, range_of_appearance, oligo_prec, S, alg='greed
             if com > m:
                 key = oligo
                 m = com
-        solution_c+=1
-        return key, solution_c
+        return key
     # elif alg == 'greedy_lag':
     #     tmp = None
     #     if prec_com == True:
