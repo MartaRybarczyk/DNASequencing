@@ -168,10 +168,17 @@ def ACO_metaheuristic(range_of_appearance, S, n, l, initial_oligo=None, debug=Fa
                 bs_update = True
         
         duration = time.time() - algorithm_start
+        
+        if(objective_function(pbs)) == n - l + 1:
+            print("seconds:", duration)
+            print("miliseconds:", duration * 1000)
+            print("microseconds:", duration * 10 ** 6)
+            return pbs
 
     # if gather_stats:
     #     print(stats)
 
+    print(objective_function(pbs))
     return pbs
         
 
