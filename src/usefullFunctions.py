@@ -14,10 +14,12 @@ def max_common_part(oligo_prec, oligo_succ):
     n1 = len(oligo_prec)
     n2 = len(oligo_succ)
     
-    for i in range(min(n1, n2) - 1, -1, -1):
+    """ for i in range(min(n1, n2) - 1, -1, -1):
         if (oligo_prec[n1 - i:] == oligo_succ[:i]) == True:
-            return i
-
+            return i """
+    
+    if oligo_prec[1:] == oligo_succ[:-1]:
+        return len(oligo_prec[1:])
     
     return 0
 

@@ -1,5 +1,6 @@
 from src import heuristics, solution, constants
 from src.usefullFunctions import objective_function, roundFloat, max_common_part, set_global_parameters
+import random
 import numpy as np
 import math
 from copy import deepcopy
@@ -66,6 +67,7 @@ def ACO_metaheuristic(range_of_appearance, S, n, l, initial_oligo=None, debug=Fa
     pib = None
     pbs = None
     prb = None
+    random.seed(0)
 
     if stats is not None:
         stats["iterNo"] = 0 # number of iterations

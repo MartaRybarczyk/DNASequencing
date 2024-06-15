@@ -34,5 +34,10 @@ if __name__ == "__main__":
         solution = ACO_metaheuristic(
             range_of_appearance, S, n, l, initial_oligo=starting_oligo
         )
-
+        _ = """ 
+        print(n, len(str(solution)))
+        print(l, n - l + 1)
+        print(len(solution.graph_path)) ## Should be the same as n - l + 1
+        
+        """
         print(solution)
