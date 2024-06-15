@@ -37,7 +37,7 @@ def greedyHeuristic(range_of_appearance, S, init_oligo_index=None, n=None, l=Non
     solution_c = l
     solution_l = 1
 
-    while solution.path_len < n and solution_l < n - l + 1:
+    while solution_l < n - l + 1:
         #print(solution.path_len, n)
         
         last_vertex = solution.graph_path[-1]
