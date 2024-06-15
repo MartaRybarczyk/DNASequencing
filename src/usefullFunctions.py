@@ -14,7 +14,7 @@ def max_common_part(oligo_prec, oligo_succ):
     n1 = len(oligo_prec)
     n2 = len(oligo_succ)
     
-    for i in range(min(n1, n2), -1, -1):
+    for i in range(min(n1, n2) - 1, -1, -1):
         if (oligo_prec[n1 - i:] == oligo_succ[:i]) == True:
             return i
 
@@ -105,6 +105,10 @@ def choose_next_oligo( solution_l, range_of_appearance, oligo_prec, S, alg='gree
                 else:
                     temp[key][0] = max_common_part(oligo_prec, S[key]) / (len(S[key]) - 1)
                 temp[key][1] = key 
+            else:
+                temp[key][0] = 0
+                temp[key][1] = key 
+
         temp[:,0] = phermone_values * (temp[:, 0] ** 5)
 
         temp = np.delete(temp, np.where(temp[:,0] == -np.inf), axis=0)

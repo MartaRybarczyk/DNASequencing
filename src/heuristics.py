@@ -38,6 +38,7 @@ def greedyHeuristic(range_of_appearance, S, init_oligo_index=None, n=None, l=Non
     solution_l = 1
 
     while solution.path_len < n and solution_l < n - l + 1:
+        #print(solution.path_len, n)
         
         last_vertex = solution.graph_path[-1]
 
@@ -47,10 +48,13 @@ def greedyHeuristic(range_of_appearance, S, init_oligo_index=None, n=None, l=Non
         index = choose_next_oligo(solution_l, range_of_appearance, solution.path[-1], copyS, choose_next_alg, use_phermone=use_phermone, phermone_model=phermone_values, 
             commons_matrix=commons_matrix, index_prec=last_vertex
         )
-
+        #print(index, copyS[index])
         solution_l += 1
 
         solution.add_oligo(copyS.pop(index), index)
+        #print(solution.path)
+        #print(solution.path_len, n)
+
         if precomputed_com:
             commons_matrix[index][index] = -1
 

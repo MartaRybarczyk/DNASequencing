@@ -1,0 +1,12 @@
+<dna key="25050508" length="16" start="TGCTGGTTAG">
+<probe pattern="NNNNNNNNNN">
+<cell posL="1" posH="5">CAGTTGGCAT</cell>
+<cell posL="1" posH="5">CTGGTTAGAA</cell>
+<cell posL="1" posH="5">GCTGGTTAGA</cell>
+<cell posL="1" posH="5">GGTTAGAACC</cell>
+<cell posL="3" posH="7">GTTAGAACCC</cell>
+<cell posL="3" posH="7">TGCTGGTTAG</cell>
+<cell posL="1" posH="5">TGGTTAGAAC</cell>
+<cell posL="3" posH="7">TTAGAACCCA</cell>
+</probe>
+</dna>
